@@ -1,21 +1,21 @@
-package tests;
+package tests.demoqa;
 
 import org.junit.jupiter.api.Test;
+import tests.TestBase;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static utils.RandomUtils.*;
 
-public class StudentRegistrationFormWithRandomUtilsTests extends TestBase {
+public class StudentRegistrationFormTests extends TestBase {
 
     @Test
     void successfulFillFormTest() {
-        String firstName = getRandomString(10),
-                lastName = getRandomString(10),
-                email = getRandomEmail(),
+        String firstName = "Alex",
+                lastName = "Alexov",
+                email = "aa@aa.com",
                 gender = "Other",
-                mobile = getRandomPhone(),
+                mobile = "1234567890",
                 dayOfBirth = "10",
                 monthOfBirth = "May",
                 yearOfBirth = "1988",
@@ -25,7 +25,7 @@ public class StudentRegistrationFormWithRandomUtilsTests extends TestBase {
                 hobby2 = "Reading",
                 hobby3 = "Music",
                 picture = "1.png",
-                currentAddress = getRandomMessage(30, 100),
+                currentAddress = "Montenegro 123",
                 state = "Uttar Pradesh",
                 city = "Merrut";
 
@@ -35,7 +35,7 @@ public class StudentRegistrationFormWithRandomUtilsTests extends TestBase {
         $("#firstName").val(firstName);
         $("#lastName").val(lastName);
         $("#userEmail").val(email);
-        $("#genterWrapper").$(byText(gender)).click();
+        $(byText("Male")).click();
         $("#userNumber").val(mobile);
         // set date
         $("#dateOfBirthInput").clear();
@@ -43,8 +43,8 @@ public class StudentRegistrationFormWithRandomUtilsTests extends TestBase {
         $(".react-datepicker__year-select").selectOption(yearOfBirth);
         $(".react-datepicker__day--0" + dayOfBirth).click();
         // set subject
-        $("#subjectsInput").val(subject1);
-        $(".subjects-auto-complete__menu-list").$(byText(subject1)).click();
+        $("#subjectsInput").setValue(subject1).pressEnter();
+//        $(".subjects-auto-complete__menu-list").$(byText(subject1)).click();
         $("#subjectsInput").val(subject2);
         $(".subjects-auto-complete__menu-list").$(byText(subject2)).click();
         // set hobbies
@@ -65,6 +65,10 @@ public class StudentRegistrationFormWithRandomUtilsTests extends TestBase {
         $("#submit").click();
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
 
+        // asserts
+//        $(".table-responsive").shouldHave(text(firstName + " " + lastName),
+//                text(email), text(gender));
+//        $(".table-responsive").$(byText("Student Name")).parent().shouldHave(text(firstName + " " + lastName));
         $x("//td[text()='Student Name']").parent().shouldHave(text(firstName + " " + lastName));
         $x("//td[text()='Student Email']").parent().shouldHave(text(email));
         $x("//td[text()='Gender']").parent().shouldHave(text(gender));

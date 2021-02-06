@@ -1,31 +1,24 @@
-package tests;
+package tests.demoqa.pageobjects.steps;
 
-import com.github.javafaker.Faker;
-import com.github.javafaker.service.FakeValuesService;
-import com.github.javafaker.service.RandomService;
 import org.junit.jupiter.api.Test;
-
-import java.util.Locale;
+import tests.TestBase;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static utils.RandomUtils.*;
 
-public class StudentRegistrationFormWithFakerTests extends TestBase {
+public class StudentRegistrationFormTests extends TestBase {
+    StudentRegistrationPage studentRegistrationPage;
 
     @Test
     void successfulFillFormTest() {
-        Faker faker = new Faker();
-//        FakeValuesService fakeValuesService = new FakeValuesService(
-//                new Locale("en-GB"), new RandomService());
+        studentRegistrationPage = new StudentRegistrationPage();
 
-        String firstName = faker.name().firstName(),
-                lastName = faker.name().lastName(),
-//                email = fakeValuesService.bothify("????##@gmail.com"),
-                email = faker.internet().emailAddress(),
+        String firstName = "Alex",
+                lastName = "Alexov",
+                email = "aa@aa.com",
                 gender = "Other",
-                mobile = faker.phoneNumber().cellPhone(),
+                mobile = "1234567890",
                 dayOfBirth = "10",
                 monthOfBirth = "May",
                 yearOfBirth = "1988",
@@ -35,23 +28,20 @@ public class StudentRegistrationFormWithFakerTests extends TestBase {
                 hobby2 = "Reading",
                 hobby3 = "Music",
                 picture = "1.png",
-                currentAddress = faker.address().fullAddress(),
+                currentAddress = "Montenegro 123",
                 state = "Uttar Pradesh",
                 city = "Merrut";
 
         open("https://demoqa.com/automation-practice-form");
-        $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
+        studentRegistrationPage.checkPageHeader("Student Registration Form");
 
-        $("#firstName").val(firstName);
+        studentRegistrationPage.setFirstName(firstName);
         $("#lastName").val(lastName);
         $("#userEmail").val(email);
         $("#genterWrapper").$(byText(gender)).click();
         $("#userNumber").val(mobile);
         // set date
-        $("#dateOfBirthInput").clear();
-        $(".react-datepicker__month-select").selectOption(monthOfBirth);
-        $(".react-datepicker__year-select").selectOption(yearOfBirth);
-        $(".react-datepicker__day--0" + dayOfBirth).click();
+        studentRegistrationPage.setBirthDate(yearOfBirth, monthOfBirth, dayOfBirth);
         // set subject
         $("#subjectsInput").val(subject1);
         $(".subjects-auto-complete__menu-list").$(byText(subject1)).click();
@@ -74,6 +64,7 @@ public class StudentRegistrationFormWithFakerTests extends TestBase {
         $("#submit").click();
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
 
+        // asserts
         $x("//td[text()='Student Name']").parent().shouldHave(text(firstName + " " + lastName));
         $x("//td[text()='Student Email']").parent().shouldHave(text(email));
         $x("//td[text()='Gender']").parent().shouldHave(text(gender));

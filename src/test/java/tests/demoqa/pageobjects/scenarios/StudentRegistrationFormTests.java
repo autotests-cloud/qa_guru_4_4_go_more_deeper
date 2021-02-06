@@ -1,4 +1,4 @@
-package tests.pageobjects.chain;
+package tests.demoqa.pageobjects.scenarios;
 
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
@@ -10,8 +10,8 @@ public class StudentRegistrationFormTests extends TestBase {
     void successfulFillFormTest() {
         studentRegistrationPage = new StudentRegistrationPage();
 
-        studentRegistrationPage.openPage()
-                .fillForm()
-                .checkData();
+        studentRegistrationPage.openPage();
+        studentRegistrationPage.fillForm();
+        studentRegistrationPage.checkData();
     }
 }

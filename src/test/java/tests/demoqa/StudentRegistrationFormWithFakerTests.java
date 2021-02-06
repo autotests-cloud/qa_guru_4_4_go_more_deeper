@@ -1,44 +1,58 @@
-package tests.pageobjects.chain;
+package tests.demoqa;
+
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
+import org.junit.jupiter.api.Test;
+import tests.TestBase;
+
+import java.util.Locale;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static utils.RandomUtils.*;
 
-public class StudentRegistrationPage {
+public class StudentRegistrationFormWithFakerTests extends TestBase {
 
-    String firstName = "Alex",
-            lastName = "Alexov",
-            email = "aa@aa.com",
-            gender = "Other",
-            mobile = "1234567890",
-            dayOfBirth = "10",
-            monthOfBirth = "May",
-            yearOfBirth = "1988",
-            subject1 = "Chemistry",
-            subject2 = "Commerce",
-            hobby1 = "Sports",
-            hobby2 = "Reading",
-            hobby3 = "Music",
-            picture = "1.png",
-            currentAddress = "Montenegro 123",
-            state = "Uttar Pradesh",
-            city = "Merrut";
+    @Test
+    void successfulFillFormTest() {
+        Faker faker = new Faker();
+//        FakeValuesService fakeValuesService = new FakeValuesService(
+//                new Locale("en-GB"), new RandomService());
 
-    public StudentRegistrationPage openPage() {
+        String firstName = faker.name().firstName(),
+                lastName = faker.name().lastName(),
+//                email = fakeValuesService.bothify("????##@gmail.com"),
+                email = faker.internet().emailAddress(),
+                gender = "Other",
+                mobile = faker.phoneNumber().cellPhone(),
+                dayOfBirth = "10",
+                monthOfBirth = "May",
+                yearOfBirth = "1988",
+                subject1 = "Chemistry",
+                subject2 = "Commerce",
+                hobby1 = "Sports",
+                hobby2 = "Reading",
+                hobby3 = "Music",
+                picture = "1.png",
+                currentAddress = faker.address().fullAddress(),
+                state = "Uttar Pradesh",
+                city = "Merrut";
+
         open("https://demoqa.com/automation-practice-form");
         $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
 
-        return this;
-    }
-
-    public StudentRegistrationPage fillForm() {
         $("#firstName").val(firstName);
         $("#lastName").val(lastName);
         $("#userEmail").val(email);
         $("#genterWrapper").$(byText(gender)).click();
         $("#userNumber").val(mobile);
         // set date
-        setBirthDate(yearOfBirth, monthOfBirth, dayOfBirth);
+        $("#dateOfBirthInput").clear();
+        $(".react-datepicker__month-select").selectOption(monthOfBirth);
+        $(".react-datepicker__year-select").selectOption(yearOfBirth);
+        $(".react-datepicker__day--0" + dayOfBirth).click();
         // set subject
         $("#subjectsInput").val(subject1);
         $(".subjects-auto-complete__menu-list").$(byText(subject1)).click();
@@ -61,17 +75,6 @@ public class StudentRegistrationPage {
         $("#submit").click();
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
 
-        return this;
-    }
-
-    public void setBirthDate(String year, String month, String day) {
-        $("#dateOfBirthInput").clear();
-        $(".react-datepicker__month-select").selectOption(month);
-        $(".react-datepicker__year-select").selectOption(year);
-        $(".react-datepicker__day--0" + day).click();
-    }
-
-    public void checkData() {
         $x("//td[text()='Student Name']").parent().shouldHave(text(firstName + " " + lastName));
         $x("//td[text()='Student Email']").parent().shouldHave(text(email));
         $x("//td[text()='Gender']").parent().shouldHave(text(gender));
