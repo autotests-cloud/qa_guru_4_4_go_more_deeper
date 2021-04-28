@@ -87,7 +87,7 @@ public class StudentRegistrationFormWithElementsCollectionTests extends TestBase
 
         // asserts
         SoftAssertions softly = new SoftAssertions();
-        for(SelenideElement element: $$(".table-responsive tbody tr")) {
+        for(SelenideElement element: $$(".table-responsive tbody tr").snapshot()) {
             String key = element.$("td").getText();
             String actualValue = element.$("td", 1).getText();
             String expectedValue = expectedData.get(key);
